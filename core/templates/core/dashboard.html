@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">📊 Laboratory Dashboard</h2>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-3">
+            <div class="card text-bg-dark shadow">
+                <div class="card-body text-center">
+                    <h5>Total Results</h5>
+                    <h2>{{ total_results }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{% url 'core:testresult_list' %}?status=pending" class="text-decoration-none">
+                <div class="card text-bg-warning shadow">
+                    <div class="card-body text-center">
+                        <h5>Pending</h5>
+                        <h2>{{ pending_count }}</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{% url 'core:testresult_list' %}?status=completed" class="text-decoration-none">
+                <div class="card text-bg-success shadow">
+                    <div class="card-body text-center">
+                        <h5>Completed</h5>
+                        <h2>{{ completed_count }}</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{% url 'core:testresult_list' %}?status=approved" class="text-decoration-none">
+                <div class="card text-bg-primary shadow">
+                    <div class="card-body text-center">
+                        <h5>Approved</h5>
+                        <h2>{{ approved_count }}</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">🧪 Latest 5 Test Results</h5>
+        </div>
+        <div class="card-body">
+
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Patient</th>
+                        <th>Test</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in latest_results %}
+                    <tr>
+                        <td>{{ r.patienttest.patient }}</td>
+                        <td>{{ r.patienttest.test }}</td>
+                        <td>
+                            {% if r.status == 'pending' %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                            {% elif r.status == 'completed' %}
+                            <span class="badge bg-success">Completed</span>
+                            {% elif r.status == 'approved' %}
+                            <span class="badge bg-primary">Approved</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">No results found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

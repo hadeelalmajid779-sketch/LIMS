@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Reception Dashboard</title>
+</head>
+
+<body>
+
+    <h1>Reception Dashboard</h1>
+    <a href="{% url 'core:logout' %}">Logout</a>
+    <h1>Welcome to Reception Dashboard</h1>
+
+    <p>Hello {{ request.user.username }}</p>
+</body>
+
+</html>

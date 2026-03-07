@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary">Patients List</h2>
+        <a href="{% url 'core:patient_create' %}" class="btn btn-success shadow-sm">
+            <i class="bi bi-person-plus"></i> Add New Patient
+        </a>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="input-group mb-3 shadow-sm">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search by patient name...">
+        <span class="input-group-text bg-primary text-white"><i class="bi bi-search"></i></span>
+    </div>
+
+    {% if patients %}
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover table-striped mb-0" id="patientTable">
+                <thead class="table-primary text-center">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>date_of_birth</th>
+                        <th>Registration Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center align-middle">
+                    {% for patient in patients %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <a href="{% url 'core:patient_detail' patient.id %}">
+                                {{ patient.first_name }}
+                            </a>
+                        </td>
+                        <td>{{ patient.date_of_birth }}</td>
+                        <td>{{ patient.registration_date|date:"Y-m-d" }}</td>
+                        <td>
+                            <a href="{% url 'core:patient_detail' patient.id %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                            <a href="{% url 'admin:core_patient_change' patient.id %}"
+                                class="btn btn-sm btn-outline-warning">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <a href="{% url 'core:patient_delete' patient.pk %}" class="btn btn-sm btn-danger">
+                                Delete
+                            </a>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center shadow-sm mt-3">
+        No patients found.
+    </div>
+    {% endif %}
+</div>
+
+<!-- JavaScript for search filter -->
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function () {
+        const searchValue = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#patientTable tbody tr');
+
+        rows.forEach(row => {
+            const name = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+            row.style.display = name.includes(searchValu) ? '' : 'none';
+        });
+    });
+</script>
+{% endblock %}

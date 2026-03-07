@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Patient Test Details</h3>
+
+<div class="card">
+    <div class="card-body">
+        <p>
+            <strong>Patient:</strong>
+            {{ patienttest.patient.first_name }}
+            {{ patienttest.patient.last_name }}
+        </p>
+
+        <p>
+            <strong>Test:</strong>
+            {{ patienttest.test }}
+        </p>
+
+        <p>
+            <strong>Date:</strong>
+            {{ patienttest.created_at|date:"Y-m-d" }}
+        </p>
+    </div>
+</div>
+
+<br>
+
+<a href="{% url 'core:testresult_create' patienttest.id %}" class="btn btn-primary">
+    Add Test Result
+</a>
+
+<a href="{% url 'core:patienttest_list' %}" class="btn btn-secondary">
+    Back
+</a>
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2> Tests</h2>
+    <p><a class="btn btn-primary" href="{% url 'core:test_create' %}">Add New Test</a></p>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Test Code</th>
+                <th>Test Name</th>
+                <th>Department</th>
+                <th>Price</th>
+                <th>Actions</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for test in test %}
+            <tr>
+                <td>{{ test.test_code }}</td>
+                <td><a href="{% url 'core:test_detail' test.pk %}">{{ test.test_name }}</a></td>
+                <td>{{ test.department }}</td>
+                <td>{{ test.price }}</td>
+                <td>
+                    <a class="btn btn-sm btn-secondary" href="{% url 'core:test_edit' test.pk %}">Edit</a>
+                    <a href="{% url 'core:test_delete' test.id %}" class="btn btn-sm btn-danger">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No test </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

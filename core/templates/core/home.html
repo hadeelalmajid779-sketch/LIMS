@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Welcome Section -->
+<div class="text-center mt-5">
+    <h2 class="fw-bold">
+        Welcome to the Laboratory Information Management System (LIMS)
+    </h2>
+    <p class="lead mt-3">
+        Manage patients, tests, and results efficiently with a clean interface.
+    </p>
+</div>
+
+<hr class="my-5">
+
+<!-- Role Selection Section -->
+<div class="text-center mb-4">
+    <h3 class="fw-bold">Choose the type of login</h3>
+</div>
+
+<div class="row justify-content-center">
+
+    <!-- Manager -->
+    <div class="col-md-3">
+        <a href="/login/manager/" class="text-decoration-none">
+            <div class="card shadow-lg text-center p-4 role-card border-0">
+                <div class="icon bg-primary text-white mb-3">
+                    <i class="bi bi-person-badge fs-2"></i>
+                </div>
+                <h5 class="fw-bold text-dark">Manager</h5>
+            </div>
+        </a>
+    </div>
+
+    <!-- Doctor -->
+    <div class="col-md-3">
+        <a href="/login/doctor/" class="text-decoration-none">
+            <div class="card shadow-lg text-center p-4 role-card border-0">
+                <div class="icon bg-success text-white mb-3">
+                    <i class="bi bi-heart-pulse fs-2"></i>
+                </div>
+                <h5 class="fw-bold text-dark">Doctor</h5>
+            </div>
+        </a>
+    </div>
+
+
+
+    <!-- Lab -->
+    <div class="col-md-3">
+        <a href="/login/lab/" class="text-decoration-none">
+            <div class="card shadow-lg text-center p-4 role-card border-0">
+                <div class="icon bg-info text-white mb-3">
+                    <i class="bi bi-flask fs-2"></i>
+                </div>
+                <h5 class="fw-bold text-dark">Laboratory</h5>
+            </div>
+        </a>
+    </div>
+
+    <!-- Accounting -->
+    <div class="col-md-3">
+        <a href="/login/accounting/" class="text-decoration-none">
+            <div class="card shadow-lg text-center p-4 role-card border-0">
+                <div class="icon bg-warning text-white mb-3">
+                    <i class="bi bi-cash-stack fs-2"></i>
+                </div>
+                <h5 class="fw-bold text-dark">Accounting</h5>
+            </div>
+        </a>
+    </div>
+
+
+</div>
+
+<!-- Styling -->
+<style>
+    .role-card {
+        transition: 0.3s;
+        border-radius: 15px;
+    }
+
+    .role-card:hover {
+        transform: translateY(-8px);
+    }
+
+    .icon {
+        width: 70px;
+        height: 70px;
+        margin: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+</style>
+
+{% endblock %}

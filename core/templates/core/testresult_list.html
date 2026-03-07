@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>Test Results</h3>
+
+{% if perms.core.add_testresult %}
+<a href="{% url 'core:testresult_list' %}" class="btn btn-primary mb-3">
+    Add Test Result
+</a>
+{% endif %}
+
+<div class="mb-3">
+    <a href="{% url 'core:testresult_list' %}" class="btn btn-secondary">All</a>
+    <a href="?status=pending" class="btn btn-warning">Pending</a>
+    <a href="?status=completed" class="btn btn-success">Completed</a>
+    <a href="?status=approved" class="btn btn-primary">Approved</a>
+</div>
+
+<form method="get" class="mb-3">
+    <select name="status" class="form-select" onchange="this.form.submit()">
+        <option> value = "">All</option>
+        <option> value = "pending" {% if status == 'pending' %}selected{% endif %}>Pending</option>
+        <option> value = "completed" {% if status == 'completed' %}selected{% endif %}>Completed</option>
+        <option> value = "approved" {% if status == 'approved' %}selected{% endif %}>Approved</option>
+    </select>
+</form>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <input type="text" name="search" value="{{ search }}" class="form-control" placeholder="Search patient name">
+    </div>
+
+    <div class="col-md-3">
+        <select name="status" class="form-select">
+            <option> value = "">All Status</option>
+            <option>value = "pending" {% if status == 'pending' %}selected{% endif %}>Pending</option>
+            <option> value = "completed" {% if status == 'completed' %}selected{% endif %}>Completed</option>
+            <option> value = "approved" {% if status == 'approved' %}selected{% endif %}>Approved</option>
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <button class="btn btn-dark w-100">Search</button>
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Patient</th>
+            <th>Test</th>
+            <th>Result</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <nav>
+            <ul class="pagination">
+                {% if result.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ result.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">
+                        {{ result.number }}
+                    </span>
+                </li>
+
+                {% if result.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ result.next_page_number }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% for r in result %}
+        <tr>
+            <td>{{ r.patienttest.patient }}</td>
+            <td>{{ r.patienttest.test }}</td>
+            <td>{{ r.result_valu }} {{ r.unit }}</td>
+            <td>{{ r.status }}</td>
+            <td>
+            <td>
+                {% if r.status == 'pending' %}
+                <span class="badge bg-warning">Pending</span>
+                {% elif r.status == 'completed' %}
+                <span class="badge bg-success">Completed</span>
+                {% else %}
+                <span class="badge bg-primary">Approved</span>
+                {% endif %}
+            </td>
+            </td>
+            {% if r.status != 'approved' %}
+            <a class="btn btn-sm btn-danger" href="{% url 'core:testresult_delete' r.pk %}">
+                Delete
+            </a>
+            {% endif %}
+
+            <td>
+                <a class="btn btn-sm btn-info" href="{% url 'core:testresult_detail' r.pk %}">
+                    View
+                </a>
+                {% if r.status != 'approved' %}
+                <a href="{% url 'core:testresult_update' r.id %}" class="btn btn-sm btn-warning">Edit</a>
+                {% endif %}
+
+                <a class="btn btn-sm btn-success" href="{% url 'core:testresult_complete' r.pk %}">
+                    Complete
+                </a>
+
+
+                {% if r.status == 'completed' and perms.core.approve_testresult %}
+                <a class="btn btn-sm btn-primary" href="{% url 'core:testresult_approve' r.pk %}">
+                    Approve
+                </a>
+                {% endif %}
+            </td>
+            </td>
+        <tr>
+            <td colspan="5">No results found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

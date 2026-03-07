@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>{{ test.test_name }} ({{ test.test_code }})</h2>
+    <dl class="row">
+        <dt class="col-sm-3">Department</dt>
+        <dd class="col-sm-9">{{ test.department }}</dd>
+        <dt class="col-sm-3">Price</dt>
+        <dd class="col-sm-9">{{ test.price }}</dd>
+        <dt class="col-sm-3">Unit</dt>
+        <dd class="col-sm-9">{{ test.unit }}</dd>
+        <dt class="col-sm-3">Reference Range</dt>
+        <dd class="col-sm-9">{{ test.reference_range }}</dd>
+        <dt class="col-sm-3">Turnaround (hours)</dt>
+        <dd class="col-sm-9">{{ test.turnaround_time_hours }}</dd>
+        <dt class="col-sm-3">Active</dt>
+        <dd class="col-sm-9">{{ test.active }}</dd>
+    </dl>
+    <p>
+        <a class="btn btn-secondary" href="{% url 'core:test_edit' test.pk %}">Edit</a>
+        <a class="btn btn-primary" href="{% url 'core:test_list' %}">Back to tests</a>
+    </p>
+</div>
+{% endblock %}

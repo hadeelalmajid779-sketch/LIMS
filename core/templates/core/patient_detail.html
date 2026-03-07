@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Patient Detail</h2>
+
+<p><strong>Name:</strong> {{ patient.first_name }}</p>
+<p><strong>Age:</strong> {{ patient.date_of_birth }}</p>
+<p><strong>Device No:</strong> {{ patient.device_no }}</p>
+
+<hr>
+
+<h3>Patient Tests</h3>
+
+<table border="1">
+    <tr>
+        <th>Test</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+    {% for pt in patienttest %}
+    <tr>
+        <td>{{ pt.test_name }}</td>
+        <td>{{ pt.created_at }}</td>
+        <td>{{ pt.status }}</td>
+        <td>
+            {% if pt.result %}
+            <a href="{% url 'core:testresult_detail' pt.testresult.id %}">
+                View Result
+            </a>
+            {% else %}
+            <a href="{% url 'core:testresult_create' pt.id %}">
+                Add Result
+            </a>
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">No tests found.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

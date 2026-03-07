@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3>
+    Add TestResult<br>
+    Patient: {{ patienttest.patient.first_name }} {{ patienttest.patient.last_name }}<br>
+    Test: {{ patienttest.test_name }}
+</h3>
+<form method="post">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-success">
+        Save Result
+    </button>
+
+    <a href="{% url 'core:patienttest_detail' patienttest.id %}" class="btn btn-secondary">
+        Cancel
+    </a>
+</form>
+{% endblock %}

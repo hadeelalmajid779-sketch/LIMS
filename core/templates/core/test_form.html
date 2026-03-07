@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>{{ action }} Test</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            {% for field in form %}
+            <div class="col-md-6 mb-3">
+                <label>{{ field.label_tag }}</label>
+                {{ field }}
+                {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+                <div class="text-danger">{{ field.errors }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="btn btn-primary">{{ action }}</button>
+        <a class="btn btn-secondary" href="{% url 'core:test_list' %}">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container mt-3">
+    <h3>Register New Patient</h3>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            {% for field in form %}
+            <div class="col-md-6 mb-2">
+                <label>{{ field.label_tag }}</label>
+                {{ field|add_class:"form-control" }}
+                <div class="text-danger small">{{ field.errors }}</div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="btn btn-primary">save</button>
+        <a class="btn btn-secondary" href="{% url 'core:patient_list' %}">Cancel</a>
+    </form>
+</div>
+{% endblock %}

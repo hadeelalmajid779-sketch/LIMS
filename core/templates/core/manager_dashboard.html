@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% block content %}
+
+<a href="{% url 'core:export_manager_report' %}" class="btn btn-dark mb-3">
+    Export Full Report (Excel)
+</a>
+<a href="{% url 'core:export_manager_pdf' %}" class="btn btn-dark mb-3">
+    Download PDF Report
+</a>
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Manager Dashboard</h2>
+
+    <!-- Top Statistics Cards -->
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3 shadow">
+                <div class="card-body">
+                    <h5>Total Patients</h5>
+                    <h3>{{ patients_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3 shadow">
+                <div class="card-body">
+                    <h5>Total Tests</h5>
+                    <h3>{{ tests_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-danger mb-3 shadow">
+                <div class="card-body">
+                    <h5>Total Results</h5>
+                    <h3>{{ results_count }}</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Patients Per Month Chart -->
+    <div class="card shadow mt-4">
+        <div class="card-body">
+            <h5 class="mb-3">Patients Per Month</h5>
+            <canvas id="patientsChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Monthly Revenue Chart -->
+    <div class="card shadow mt-4">
+        <div class="card-body">
+            <h5 class="mb-3">Monthly Revenue</h5>
+            <canvas id="revenueChart"></canvas>
+        </div>
+    </div>
+    <div class="card shadow mt-4">
+        <div class="card-body">
+            <h5 class="mb-3">Test Status Distribution</h5>
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+    <!-- Status Cards -->
+    <div class="row mt-4">
+
+        <div class="col-md-4">
+            <div class="card text-white bg-warning shadow">
+                <div class="card-body">
+                    <h6>Pending Results</h6>
+                    <h4>{{ pending_count }}</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-info shadow">
+                <div class="card-body">
+                    <h6>Completed Results</h6>
+                    <h4>{{ complete_count }}</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-success shadow">
+                <div class="card-body">
+                    <h6>Approved Results</h6>
+                    <h4>{{ approved_count }}</h4>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Patients Chart
+    const patientsCtx = document.getElementById('patientsChart');
+
+    new Chart(patientsCtx, {
+        type: 'bar',
+        data: {
+            labels: { labelssafe },
+            datasets: [{
+                label: 'Patients',
+                data: { datasafe },
+                backgroundColor: '#0d6efd',
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            animation: {
+                duration: 1500
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    // Revenue Chart
+    const revenueCtx = document.getElementById('revenueChart');
+
+    new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+            labels: { monthssafe },
+            datasets: [{
+                label: 'Monthly Revenue',
+                data: { totalssafe },
+                borderColor: '#198754',
+                backgroundColor: 'rgba(25,135,84,0.2)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            animation: {
+                duration: 1800
+            }
+        }
+    });
+
+    // Status Pie Chart
+    const statusCtx = document.getElementById('statusChart');
+
+    new Chart(statusCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Pending', 'Completed', 'Approved'],
+            datasets: [{
+                data: [
+                    { pending_count },
+                    { complete_count },
+                    { approved_count }
+                ],
+                backgroundColor: [
+                    '#ffc107',
+                    '#0dcaf0',
+                    '#198754'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            animation: {
+                duration: 2000
+            }
+        }
+    });
+</script>
+{% endblock %}

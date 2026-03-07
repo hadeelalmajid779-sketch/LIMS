@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Doctor Dashboard</h2>
+
+    <div class="card shadow">
+        <div class="card-body">
+
+            <h5 class="mb-3">Completed Test Results (Waiting for Approval)</h5>
+
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Test Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in completed_results %}
+                    <tr>
+                        <td>{{ result.patient_test.patient.name }}</td>
+                        <td>{{ result.patient_test.test.name }}</td>
+                        <td>
+                            <span class="badge bg-info text-dark">
+                                {{ result.status|title }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'core:testresult_approve' result.id %}" class="btn btn-success btn-sm">
+                                Approve Result
+                            </a>
+                            <a href="{% url 'core:testresult_pdf' result.id %}" class="btn btn-secondary btn-sm">
+                                Download PDF
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            No completed test results.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

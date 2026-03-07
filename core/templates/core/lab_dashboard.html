@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">Laboratory Dashboard</h2>
+
+    <div class="card shadow">
+        <div class="card-body">
+
+            <h5 class="mb-3">Pending Test Results</h5>
+
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Test Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in pending_results %}
+                    <tr>
+                        <td>{{ result.patient_test.patient.name }}</td>
+                        <td>{{ result.patient_test.test.name }}</td>
+                        <td>
+                            <span class="badge bg-warning text-dark">
+                                {{ result.status|title }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'core:testresult_update' result.id %}" class="btn btn-primary btn-sm">
+                                Enter Result
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            No pending test results.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
