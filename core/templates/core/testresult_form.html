@@ -6,7 +6,30 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
+    <div>
+        <label>WBC</label>
+        {{ form.wbc }}
+    </div>
 
+    <div>
+        <label>RBC</label>
+        {{ form.rbc }}
+    </div>
+
+    <div>
+        <label>Hemoglobin</label>
+        {{ form.hemoglobin }}
+    </div>
+
+    <div>
+        <label>Hematocrit</label>
+        {{ form.hematocrit }}
+    </div>
+
+    <div>
+        <label>Platelets</label>
+        {{ form.platelets }}
+    </div>
     <button class="btn btn-primary">Save</button>
     <a href="{% url 'core:testresult_detail' form.instance.pk %}" class="btn btn-secondary">
         Cancel

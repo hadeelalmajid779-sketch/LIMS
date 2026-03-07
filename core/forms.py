@@ -50,4 +50,4 @@ from .models import TestResult
 class TestResultForm(forms.ModelForm):
     class Meta:
         model = TestResult
-        fields = ['result_valu', 'unit', 'reference_range']
+        fields = ['result_valu', 'unit', 'reference_range', 'wbc','rbc','hemoglobin','hematocrit','platelets']

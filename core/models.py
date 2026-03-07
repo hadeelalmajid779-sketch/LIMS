@@ -171,11 +171,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 class TestResult(models.Model):
-    patienttest = models.OneToOneField(
-        PatientTest,
-        on_delete=models.CASCADE
-    )
-
+    patienttest = models.OneToOneField( PatientTest,on_delete=models.CASCADE )
+    wbc = models.FloatField("WBC", null=True, blank=True)
+    rbc = models.FloatField("RBC", null=True, blank=True)
+    hemoglobin = models.FloatField("Hemoglobin", null=True, blank=True)
+    hematocrit = models.FloatField("Hematocrit", null=True, blank=True)
+    platelets = models.FloatField("Platelets", null=True, blank=True)
     result_valu = models.CharField(max_length=100)
     unit = models.CharField(max_length=50, blank=True)
     reference_range = models.CharField(max_length=100, blank=True)

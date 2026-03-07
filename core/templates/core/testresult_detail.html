@@ -39,7 +39,11 @@
 <p><strong>Completed at:</strong> {{ result.completed_at }}</p>
 {% endif %}
 <hr>
-
+<p>WBC: {{ object.wbc }}</p>
+<p>RBC: {{ object.rbc }}</p>
+<p>Hemoglobin: {{ object.hemoglobin }}</p>
+<p>Hematocrit: {{ object.hematocrit }}</p>
+<p>Platelets: {{ object.platelets }}</p>
 {% if result.status == 'pending' and perms.core.change_testresult %}
 <a href="{% url 'core:testresult_complete' result.pk %}" class="btn btn-warning">
     Mark as Completed
