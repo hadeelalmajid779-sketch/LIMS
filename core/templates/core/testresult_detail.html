@@ -7,8 +7,7 @@
 <p><strong>Test:</strong> {{ result.patienttest.test }}</p>
 <p><strong>Result:</strong> {{ result.result_valu }} {{ result.unit }}</p>
 <p><strong>Reference Range:</strong> {{ result.reference_range }}</p>
-<p><strong>Status:</strong> {{ result.get_status_display }}</p>
-<p><strong>Notes:</strong> {{ result.notes }}</p>
+
 <p><strong>Status:</strong>
     {% if result.status == 'pending' %}
     <span class="badge bg-warning">Pending</span>
@@ -18,56 +17,27 @@
     <span class="badge bg-primary">Approved</span>
     {% endif %}
 </p>
-{% if result.status == 'pending' %}
-<a class="btn btn-warning" href="{% url 'core:testresult_complete' result.pk %}">
-    Mark as Completed
-</a>
-{% endif %}
 
-{% if result.status == 'approved' %}
-<p><strong>Approved by:</strong> {{ result.approved_by }}</p>
-<p><strong>Approved at:</strong> {{ result.approved_at }}</p>
-{% endif %}
-{% if result.status == 'approved' %}
-<div class="alert alert-success">
-    This result is officially approved and locked.
-</div>
-{% endif %}
-
-{% if result.completed_by %}
-<p><strong>Completed by:</strong> {{ result.completed_by }}</p>
-<p><strong>Completed at:</strong> {{ result.completed_at }}</p>
-{% endif %}
 <hr>
-<p>WBC: {{ object.wbc }}</p>
-<p>RBC: {{ object.rbc }}</p>
-<p>Hemoglobin: {{ object.hemoglobin }}</p>
-<p>Hematocrit: {{ object.hematocrit }}</p>
-<p>Platelets: {{ object.platelets }}</p>
-{% if result.status == 'pending' and perms.core.change_testresult %}
-<a href="{% url 'core:testresult_complete' result.pk %}" class="btn btn-warning">
-    Mark as Completed
-</a>
+<p><strong>WBC:</strong> {{ result.wbc }}</p>
+<p><strong>RBC:</strong> {{ result.rbc }}</p>
+<p><strong>Hemoglobin:</strong> {{ result.hemoglobin }}</p>
+<p><strong>Hematocrit:</strong> {{ result.hematocrit }}</p>
+<p><strong>Platelets:</strong> {{ result.platelets }}</p>
+<hr>
+
+{% if result.status == 'pending' %}
+<a class="btn btn-warning" href="{% url 'core:testresult_complete' result.pk %}">Mark as Completed</a>
 {% endif %}
 
 {% if result.status == 'completed' and perms.core.approve_testresult %}
-<a href="{% url 'core:testresult_approve' result.pk %}" class="btn btn-success">
-    Approve Result
-</a>
+<a href="{% url 'core:testresult_approve' result.pk %}" class="btn btn-success">Approve Result</a>
 {% endif %}
 
 {% if perms.core.change_testresult and result.status != 'approved' %}
-<a href="{% url 'core:testresult_update' result.pk %}" class="btn btn-primary">
-    Edit
-</a>
+<a href="{% url 'core:testresult_update' result.pk %}" class="btn btn-primary">Edit</a>
 {% endif %}
 
-{% if perms.core.delete_testresult and result.status != 'approved' %}
-<a href="{% url 'core:testresult_delete' result.pk %}" class="btn btn-danger">
-    Delete
-</a>
-{% endif %}
-<a href="{% url 'core:testresult_print' result.id %}" target="_blank" class="btn btn-secondary">
-    🖨️ Print
-</a>
+<a href="{% url 'core:testresult_print' result.id %}" target="_blank" class="btn btn-secondary">🖨 Print</a>
+
 {% endblock %}

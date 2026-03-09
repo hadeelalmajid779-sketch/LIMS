@@ -5,10 +5,42 @@
 
     <h2 class="mb-4">Laboratory Dashboard</h2>
 
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <h3 class="mb-3">Lab Orders</h3>
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Patient</th>
+                        <th>Test</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        {# الوصول لاسم المريض في طلبات المختبر #}
+                        <td>{{ order.patient.name|default:order.patient }}</td>
+                        <td>{{ order.test.test_name|default:order.test }}</td>
+                        <td>
+                            <a href="{% url 'core:add_result' order.id %}" class="btn btn-success btn-sm">
+                                Add Result
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">No orders found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="card shadow">
         <div class="card-body">
-
-            <h5 class="mb-3">Pending Test Results</h5>
+            <h5 class="mb-3 text-warning">Pending Test Results (Action Required)</h5>
 
             <table class="table table-hover table-bordered align-middle">
                 <thead class="table-dark">
@@ -22,8 +54,18 @@
                 <tbody>
                     {% for result in pending_results %}
                     <tr>
-                        <td>{{ result.patient_test.patient.name }}</td>
-                        <td>{{ result.patient_test.test.name }}</td>
+                        <td>
+                            {# تعديل: patienttest بدون underscore #}
+                            {% if result.patienttest.patient.name %}
+                            {{ result.patienttest.patient.name }}
+                            {% else %}
+                            {{ result.patienttest.patient }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {# تعديل: الوصول لاسم الفحص الصحيح #}
+                            {{ result.patienttest.test.test_name|default:result.patienttest.test }}
+                        </td>
                         <td>
                             <span class="badge bg-warning text-dark">
                                 {{ result.status|title }}
@@ -31,23 +73,24 @@
                         </td>
                         <td>
                             <a href="{% url 'core:testresult_update' result.id %}" class="btn btn-primary btn-sm">
-                                Enter Result
+                                Enter/Edit Result
+                            </a>
+                            <a href="{% url 'core:testresult_detail' result.id %}" class="btn btn-info btn-sm">
+                                View
                             </a>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="4" class="text-center">
+                        <td colspan="4" class="text-center py-3">
                             No pending test results.
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-
         </div>
     </div>
-
 </div>
 
 {% endblock %}

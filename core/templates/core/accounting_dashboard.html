@@ -5,25 +5,34 @@
 
     <h2 class="mb-4">Accounting Dashboard</h2>
 
-    <div class="card shadow">
-        <div class="card-body">
-            <div class="mb-3">
-                <a href="?filter=daily" class="btn btn-outline-primary btn-sm">Today</a>
-                <a href="?filter=monthly" class="btn btn-outline-success btn-sm">This Month</a>
-                <a href="{% url 'core:accounting_dashboard' %}" class="btn btn-outline-dark btn-sm">All</a>
-            </div>
-            <h5 class="mb-3">Approved Results (Ready for Delivery)</h5>
-            <div class="card bg-dark text-white mb-4 shadow">
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white shadow">
                 <div class="card-body">
-                    <h5>Total Revenue (Approved Tests)</h5>
-                    <h3>${{ total_revenue }}</h3>
+                    <h5 class="card-title">Total Revenue (Approved Tests)</h5>
+                    <h2 class="display-4">${{ total_revenue }}</h2>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="m-0">Approved Results (Ready for Billing)</h5>
+                <div class="btn-group">
+                    <a href="?filter=daily" class="btn btn-outline-secondary btn-sm">Today</a>
+                    <a href="?filter=monthly" class="btn btn-outline-secondary btn-sm">This Month</a>
+                    <a href="?" class="btn btn-outline-secondary btn-sm">All Time</a>
+                </div>
+            </div>
+
             <table class="table table-hover table-bordered align-middle">
                 <thead class="table-dark">
                     <tr>
                         <th>Patient Name</th>
                         <th>Test Name</th>
+                        <th>Price</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -31,23 +40,35 @@
                 <tbody>
                     {% for result in approved_results %}
                     <tr>
-                        <td>{{ result.patient_test.patient.name }}</td>
-                        <td>{{ result.patient_test.test.name }}</td>
+                        <td>
+                            {# الوصول للاسم الصحيح للمريض #}
+                            {{ result.patienttest.patient.name|default:result.patienttest.patient }}
+                        </td>
+                        <td>
+                            {# الوصول لاسم الفحص #}
+                            {{ result.patienttest.test.test_name }}
+                        </td>
+                        <td>
+                            {# عرض السعر من موديل الفحص #}
+                            <span class="fw-bold text-success">
+                                ${{ result.patienttest.test.price }}
+                            </span>
+                        </td>
                         <td>
                             <span class="badge bg-success">
                                 {{ result.status|title }}
                             </span>
                         </td>
                         <td>
-                            <a href="{% url 'core:testresult_complete' result.id %}" class="btn btn-primary btn-sm">
-                                Deliver to Patient
+                            <a href="{% url 'core:testresult_pdf' result.id %}" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-file-pdf"></i> Receipt
                             </a>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="4" class="text-center">
-                            No approved results.
+                        <td colspan="5" class="text-center py-4">
+                            No approved results found for this period.
                         </td>
                     </tr>
                     {% endfor %}

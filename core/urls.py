@@ -9,6 +9,7 @@ app_name = 'core'
 
 urlpatterns = [
 
+
     # الصفحة الرئيسية (الأزرار)
     path('', views.home, name='home'),
 
@@ -70,4 +71,5 @@ urlpatterns = [
     path('testresult/<int:pk>/pdf/', views.testresult_pdf, name='testresult_pdf'),
     path('manager/export/', views.export_manager_report, name='export_manager_report'),
     path('manager/pdf/', views.export_manager_pdf, name='export_manager_pdf'),
+    path('testresult/<int:pk>/approve/', views.testresult_approve, name='testresult_approve'),
 ]

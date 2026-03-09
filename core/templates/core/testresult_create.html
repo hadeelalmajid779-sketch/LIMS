@@ -4,7 +4,7 @@
 <h3>
     Add TestResult<br>
     Patient: {{ patienttest.patient.first_name }} {{ patienttest.patient.last_name }}<br>
-    Test: {{ patienttest.test_name }}
+    Test: {{ patienttest.test.test_name }}
 </h3>
 <form method="post">
     {% csrf_token %}

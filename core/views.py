@@ -2,10 +2,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from .models import  Test, PatientTest, ActivityLog
-from .forms import   PatientTestForm, TestForm
+from .forms import   PatientTestForm, TestForm  
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from core.models import TestResult
+from core.models import TestResult, LabOrder, ParameterResult
 from django.http import HttpResponseForbidden
 from django.utils import timezone
 from django.contrib.auth.decorators import user_passes_test
@@ -15,6 +15,7 @@ from django.shortcuts import redirect, render
 from django.db.models.functions import TruncMonth
 from django.db.models import Sum
 import json
+
 def home(request):
     return render(request, 'core/home.html')
 
@@ -404,22 +405,21 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from .models import TestResult, ActivityLog
 
-
 @login_required
-@permission_required('core.change_testresult', raise_exception=True)
-def approve_result(request, pk):
-
+@permission_required('core.approve_testresult', raise_exception=True) # تأكد من اسم الصلاحية
+@user_passes_test(is_doctor) # لضمان أن الدكتور فقط هو من يوافق
+def testresult_approve(request, pk):
     result = get_object_or_404(TestResult, pk=pk)
 
-    # 🔒 لا تسمح بالموافقة إلا إذا Completed
+    # 🔒 التحقق من الحالة (تأكدنا أنها completed مع حرف d)
     if result.status != 'completed':
+        result.status = 'approved'
+        result.approved_by = request.user
+        result.approved_at = timezone.now()
+        result.save()
         messages.error(request, "Only completed results can be approved.")
         return redirect('core:testresult_detail', pk=pk)
 
-    result.status = 'approved'
-    result.approved_by = request.user
-    result.approved_at = timezone.now()
-    result.save()
 
     # 📝 تسجيل النشاط
     ActivityLog.objects.create(
@@ -427,9 +427,10 @@ def approve_result(request, pk):
         action=f"Approved result for {result.patienttest.patient}"
     )
 
-    messages.success(request, "Result approved successfully.")
-    return redirect('core:testresult_detail', pk=pk)
-
+    messages.success(request, f"تمت الموافقة على نتيجة المريض {result.patienttest.patient} بنجاح.")
+    
+    # الأفضل التوجيه لداشبورد الدكتور بعد الموافقة بدلاً من صفحة التفاصيل
+    return redirect('core:doctor_dashboard')
 
 
 from django.contrib.auth.views import LoginView
@@ -538,10 +539,20 @@ from django.db.models import Count
 from .models import Patient
 from .models import TestResult
 @login_required
-def manager_dashboard(request):
+def doctor_dashboard(request):
+    # تم التصحيح إلى completed ليتطابق مع حالة النظام
+    completed_results = TestResult.objects.filter(status='completed')
 
+    context = {
+        'completed_results': completed_results
+    }
+    return render(request, 'core/doctor_dashboard.html', context)
+
+@login_required
+def manager_dashboard(request):
     pending_count = TestResult.objects.filter(status='pending').count()
-    complete_count = TestResult.objects.filter(status='complete').count()
+    # تم التصحيح هنا أيضاً
+    complete_count = TestResult.objects.filter(status='completed').count()
     approved_count = TestResult.objects.filter(status='approved').count()
 
     context = {
@@ -553,6 +564,7 @@ def manager_dashboard(request):
         'approved_count': approved_count,
     }
 
+    # الجزء الخاص بالرسم البياني (Revenue)
     monthly_revenue = TestResult.objects.filter(status='approved') \
     .annotate(month=TruncMonth('approved_at')) \
     .values('month') \
@@ -567,24 +579,13 @@ def manager_dashboard(request):
     return render(request, 'core/manager_dashboard.html', context)
 
 @login_required
-def doctor_dashboard(request):
-
-    completed_results = TestResult.objects.filter(status='complete')
-
-    context = {
-        'completed_results': completed_results
-    }
-
-    return render(request, 'core/doctor_dashboard.html', context)
-
-
-@login_required
 def lab_dashboard(request):
 
     pending_results = TestResult.objects.filter(status='pending')
-
+    orders = LabOrder.objects.all()
     context = {
-        'pending_results': pending_results
+        'pending_results': pending_results,
+        'orders' : orders
     }
 
     return render(request, 'core/lab_dashboard.html', context)
@@ -642,8 +643,8 @@ def testresult_pdf(request, pk):
     elements = []
 
     data = [
-        ["Patient Name", result.patienttest.patient.name],
-        ["Test Name", result.patienttest.test.name],
+        ["Patient Name", result.patienttest.patient_name],
+        ["Test Name", result.patienttest.test_name],
         ["Result", result.result_valu],
         ["Status", result.status],
     ]
@@ -781,3 +782,18 @@ def export_manager_pdf(request):
 
     buffer.seek(0)
     return HttpResponse(buffer, content_type='application/pdf')
+
+def add_result(request, order_id):
+
+    order = LabOrder.objects.get(id=order_id)
+
+    if request.method == "POST":
+
+        value = request.POST.get("value")
+
+        ParameterResult.objects.create(
+            lab_order=order,
+            value=value
+        )
+
+    return render(request, "core/add_result.html", {"order": order})
