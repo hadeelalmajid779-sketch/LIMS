@@ -797,3 +797,6 @@ def add_result(request, order_id):
         )
 
     return render(request, "core/add_result.html", {"order": order})
+
+def landing(request):
+    return render(request, 'core/landing.html')

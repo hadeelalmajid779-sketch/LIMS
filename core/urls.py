@@ -9,9 +9,10 @@ app_name = 'core'
 
 urlpatterns = [
 
-
+path('', views.landing, name='landing'),
+path('home/', views.home, name='home'),
     # الصفحة الرئيسية (الأزرار)
-    path('', views.home, name='home'),
+    
 
     # تسجيل الدخول حسب الدور
     path('login/<str:role>/', views.role_login, name='role_login'),
