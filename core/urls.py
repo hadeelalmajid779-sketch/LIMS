@@ -6,7 +6,7 @@ from . import views
 from django.contrib.auth.views import LogoutView
 
 app_name = 'core'
-
+# this is our root url file
 urlpatterns = [
 
 path('', views.landing, name='landing'),
