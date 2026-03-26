@@ -10,6 +10,10 @@ app_name = 'core'
 urlpatterns = [
 
 path('', views.landing, name='landing'),
+ # تسجيل الدخول حسب الدور
+path('login/<str:role>/', views.role_login, name='role_login'),
+path('login/', views.UserLoginView.as_view(), name='login'),
+path('logout/', LogoutView.as_view(next_page='core:login'), name='logout'),
 path('home/', views.home, name='home'),
     # الصفحة الرئيسية (الأزرار)
     
@@ -17,9 +21,6 @@ path('home/', views.home, name='home'),
     # تسجيل الدخول حسب الدور
     path('login/<str:role>/', views.role_login, name='role_login'),
 
-    # تسجيل الدخول العام (إذا تحتاجينه)
-    path('login/', views.UserLoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(next_page='core:login'), name='logout'),
 
     # Dashboards
     path('manager/dashboard/', views.manager_dashboard, name='manager_dashboard'),
