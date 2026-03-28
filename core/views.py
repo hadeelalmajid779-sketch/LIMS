@@ -437,7 +437,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 
 class UserLoginView(LoginView):
-    template_name = 'core/login.html'
+    template_name = 'core/role_login.html'
 
     def get_success_url(self):
         return reverse_lazy('core:redirect_dashboard')
