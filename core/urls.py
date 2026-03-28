@@ -11,7 +11,7 @@ urlpatterns = [
     path('home/', views.home, name='home'),
 
     # تسجيل الدخول
-    path('login/<str:role>/', views.role_login, name='role_login'),
+    path('login/<str:role>/', views.login, name='role_login'),
     path('login/', views.UserLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='core:login'), name='logout'),
 

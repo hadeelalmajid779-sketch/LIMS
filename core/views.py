@@ -442,13 +442,13 @@ class UserLoginView(LoginView):
     def get_success_url(self):
         return reverse_lazy('core:redirect_dashboard')
     
-    from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 
 
 class UserLoginView(LoginView):
-    template_name = 'core/login.html'
+    template_name = 'core/role_login.html'
 
 
 @login_required
@@ -493,7 +493,7 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     return render(request, 'core/home.html')
 
-def role_login(request, role):
+def login(request, role):
 
     if request.method == 'POST':
         username = request.POST.get('username')
