@@ -20,7 +20,7 @@
                     {% for order in orders %}
                     <tr>
                         {# الوصول لاسم المريض في طلبات المختبر #}
-                        <td>{{ order.patient.name|default:order.patient }}</td>
+                        <td>{{ order.patient_first_name|default:order.patient }}</td>
                         <td>{{ order.test.test_name|default:order.test }}</td>
                         <td>
                             <a href="{% url 'core:add_result' order.id %}" class="btn btn-success btn-sm">

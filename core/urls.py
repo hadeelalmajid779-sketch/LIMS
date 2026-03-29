@@ -11,7 +11,7 @@ urlpatterns = [
     path('home/', views.home, name='home'),
 
     # تسجيل الدخول
-    path('login/<str:role>/', views.login, name='role_login'),
+    path('role_login/<str:role>/', views.role_login, name='role_login'),
     path('login/', views.UserLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='core:login'), name='logout'),
 
@@ -19,10 +19,10 @@ urlpatterns = [
     path('redirect/', views.redirect_dashboard, name='redirect_dashboard'),
 
     # dashboards
-    path('manager/dashboard/', views.manager_dashboard, name='manager_dashboard'),
-    path('doctor/dashboard/', views.doctor_dashboard, name='doctor_dashboard'),
-    path('accounting/dashboard/', views.accounting_dashboard, name='accounting_dashboard'),
-    path('lab/dashboard/', views.lab_dashboard, name='lab_dashboard'),
+    path('manager_dashboard/', views.manager_dashboard, name='manager_dashboard'),
+    path('doctor_dashboard/', views.doctor_dashboard, name='doctor_dashboard'),
+    path('accounting_dashboard/', views.accounting_dashboard, name='accounting_dashboard'),
+    path('lab_dashboard/', views.lab_dashboard, name='lab_dashboard'),
     path('dashboard/', views.dashboard, name='dashboard'),
 
     # patients

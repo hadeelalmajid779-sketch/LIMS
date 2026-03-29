@@ -426,7 +426,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 
 class UserLoginView(LoginView):
-    template_name = 'core/role_login.html'
+    template_name = 'core/login.html'
 
     def get_success_url(self):
         return reverse_lazy('core:redirect_dashboard')
@@ -438,12 +438,12 @@ from django.contrib.auth.views import LoginView
 
 class UserLoginView(LoginView):
     template_name = 'core/role_login.html'
-
-
 @login_required
 def redirect_dashboard(request):
-
     user = request.user
+
+    if user.is_superuser:
+        return redirect('/admin/')
 
     if user.groups.filter(name='Reception').exists():
         return redirect('core:reception_dashboard')
@@ -454,11 +454,10 @@ def redirect_dashboard(request):
     elif user.groups.filter(name='Accounting').exists():
         return redirect('core:accounting_dashboard')
 
-    elif user.is_superuser:
-        return redirect('/admin/')
+    elif user.groups.filter(name='Doctor').exists():
+        return redirect('core:doctor_dashboard')
 
-    return redirect('core:login')
-
+    return redirect('core:dashboard')  # fallback مهم
 
 @login_required
 def reception_dashboard(request):
@@ -482,7 +481,7 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     return render(request, 'core/home.html')
 
-def login(request, role):
+def role_login(request, role):
 
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -491,23 +490,23 @@ def login(request, role):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            login(request, user)
+            role_login(request, user)
 
             # مدير
             if role == 'manager' and user.is_superuser:
-                return redirect('core:manager_dashboard')
+                return redirect('core/manager_dashboard')
 
             # دكتور
             elif role == 'doctor':
-                return redirect('core:doctor_dashboard')
+                return redirect('core/doctor_dashboard')
 
             # حسابات
             elif role == 'accounting':
-                return redirect('core:accounting_dashboard')
+                return redirect('core/accounting_dashboard')
 
             # مختبر
             elif role == 'lab':
-                return redirect('core:lab_dashboard')
+                return redirect('core/lab_dashboard')
 
             else:
                 return render(request, 'core/role_login.html', {
