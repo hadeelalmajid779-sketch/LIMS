@@ -493,33 +493,33 @@ def role_login(request, role):
             role_login(request, user)
 
             # مدير
-            if role == 'manager' and user.is_superuser:
+            if role_login == 'manager' and user.is_superuser:
                 return redirect('core/manager_dashboard')
 
             # دكتور
-            elif role == 'doctor':
+            elif role_login == 'doctor':
                 return redirect('core/doctor_dashboard')
 
             # حسابات
-            elif role == 'accounting':
+            elif role_login == 'accounting':
                 return redirect('core/accounting_dashboard')
 
             # مختبر
-            elif role == 'lab':
+            elif role_login == 'lab':
                 return redirect('core/lab_dashboard')
 
             else:
                 return render(request, 'core/role_login.html', {
                     'error': 'ليس لديك صلاحية لهذا القسم',
-                    'role': role
+                    'role_login': role_login
                 })
 
         return render(request, 'core/role_login.html', {
             'error': 'اسم المستخدم او كلمة المرور غير صحيحة',
-            'role': role
+            'role_login': role_login
         })
 
-    return render(request, 'core/role_login.html', {'role': role})
+    return render(request, 'core/role_login.html', {'role_login': role_login})
 
 from django.contrib.auth.decorators import login_required
 from django.db.models.functions import TruncMonth
@@ -576,7 +576,7 @@ def lab_dashboard(request):
         'orders' : orders
     }
 
-    return render(request, 'core/lab_dashboard.html', context)
+    return render(request, 'core/lab_dashboard.html')
 
 from django.db.models import Sum
 from django.utils.timezone import now
