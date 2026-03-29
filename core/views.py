@@ -388,17 +388,6 @@ def dashboard(request):
 
     return render(request, 'core/dashboard.html', context)
 
-def testresult_print(request, pk):
-    result = get_object_or_404(TestResult, pk=pk)
-
-    if result.status != 'approved':
-        messages.error(request, "Only approved results can be printed.")
-        return redirect('core:testresult_detail', pk=pk)
-
-    return render(request, 'core/testresult_print.html', {
-        'result': result
-    })
-
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
@@ -800,3 +789,16 @@ def add_result(request, order_id):
 
 def landing(request):
     return render(request, 'core/landing.html')
+def testresult_print(request, pk):
+    result = get_object_or_404(TestResult, pk=pk)
+
+
+    if result.status != 'approved':
+        messages.error(request, "Only approved results can be printed.")
+        return redirect('core:testresult_detail', pk=pk)
+
+
+    return render(request, 'core/testresult_print.html', {
+        'result': result
+    })
+
