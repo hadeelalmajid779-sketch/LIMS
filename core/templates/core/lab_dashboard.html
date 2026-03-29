@@ -20,7 +20,7 @@
                     {% for order in orders %}
                     <tr>
                         {# الوصول لاسم المريض في طلبات المختبر #}
-                        <td>{{ order.patient_first_name|default:order.patient }}</td>
+                        <td>{{ order.patient.first_name|default:order.patient }}</td>
                         <td>{{ order.test.test_name|default:order.test }}</td>
                         <td>
                             <a href="{% url 'core:add_result' order.id %}" class="btn btn-success btn-sm">
@@ -54,14 +54,8 @@
                 <tbody>
                     {% for result in pending_results %}
                     <tr>
-                        <td>
-                            {# تعديل: patienttest بدون underscore #}
-                            {% if result.patienttest.patient.name %}
-                            {{ result.patienttest.patient.name }}
-                            {% else %}
-                            {{ result.patienttest.patient }}
-                            {% endif %}
-                        </td>
+                        <td>{{ result.patienttest.patient.first_name }} {{ result.patienttest.patient.last_name }}</td>
+                        <td>{{ result.patienttest.test.test_name }}</td>
                         <td>
                             {# تعديل: الوصول لاسم الفحص الصحيح #}
                             {{ result.patienttest.test.test_name|default:result.patienttest.test }}

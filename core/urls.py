@@ -11,7 +11,7 @@ urlpatterns = [
     path('home/', views.home, name='home'),
 
     # تسجيل الدخول
-    path('login/<str:role>/', views.role_login, name='role_login'),
+    path('login/<str:role>/', views.role_login, name='role_login'),  # ✔ تم التصحيح
     path('login/', views.UserLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='core:login'), name='logout'),
 
@@ -60,8 +60,6 @@ urlpatterns = [
     path('manager/export/', views.export_manager_report, name='export_manager_report'),
     path('manager/pdf/', views.export_manager_pdf, name='export_manager_pdf'),
 
-    # صفحات إضافية
+    # صفحات إضافية (اختياري)
     path('reception/', views.reception_dashboard, name='reception_dashboard'),
-    path('laboratory/', views.lab_dashboard, name='lab_dashboard'),
-    path('accounting/', views.accounting_dashboard, name='accounting_dashboard'),
 ]

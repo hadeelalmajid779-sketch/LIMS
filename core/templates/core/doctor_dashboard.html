@@ -24,10 +24,10 @@
                     <tr>
                         <td>
                             {# تعديل طريقة عرض اسم المريض #}
-                            {% if result.patienttest.patient_first_name %}
-                            {{ result.patienttest.patient_first_name }}
+                            {% if result.patienttest.patient.first_name %}
+                            {{ result.patienttest.patient.first_name}}
                             {% else %}
-                            {{ result.patienttest_first_patient }}
+                            {{ result.patienttest.patient.first_name }}
                             {% endif %}
                         </td>
                         <td>

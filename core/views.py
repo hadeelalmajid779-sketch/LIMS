@@ -395,8 +395,8 @@ from django.shortcuts import get_object_or_404, redirect
 from .models import TestResult, ActivityLog
 
 @login_required
-@permission_required('core.approve_testresult', raise_exception=True) # تأكد من اسم الصلاحية
-@user_passes_test(is_doctor) # لضمان أن الدكتور فقط هو من يوافق
+
+
 def testresult_approve(request, pk):
     result = get_object_or_404(TestResult, pk=pk)
 
@@ -480,6 +480,7 @@ from django.contrib.auth.decorators import login_required
 
 def home(request):
     return render(request, 'core/home.html')
+from django.contrib.auth import authenticate, login
 
 def role_login(request, role):
 
@@ -490,52 +491,41 @@ def role_login(request, role):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            role_login(request, user)
+            login(request, user)
 
-            # مدير
-            if role_login == 'manager' and user.is_superuser:
-                return redirect('core/manager_dashboard')
+            if role == 'manager':
+                return redirect('core:manager_dashboard')
 
-            # دكتور
-            elif role_login == 'doctor':
-                return redirect('core/doctor_dashboard')
+            elif role == 'doctor':
+                return redirect('core:doctor_dashboard')
 
-            # حسابات
-            elif role_login == 'accounting':
-                return redirect('core/accounting_dashboard')
+            elif role == 'accounting':
+                return redirect('core:accounting_dashboard')
 
-            # مختبر
-            elif role_login == 'lab':
-                return redirect('core/lab_dashboard')
+            elif role == 'lab':
+                return redirect('core:lab_dashboard')
 
             else:
                 return render(request, 'core/role_login.html', {
                     'error': 'ليس لديك صلاحية لهذا القسم',
-                    'role_login': role_login
+                    'role': role
                 })
 
         return render(request, 'core/role_login.html', {
             'error': 'اسم المستخدم او كلمة المرور غير صحيحة',
-            'role_login': role_login
+            'role': role
         })
 
-    return render(request, 'core/role_login.html', {'role_login': role_login})
-
-from django.contrib.auth.decorators import login_required
-from django.db.models.functions import TruncMonth
-from django.db.models import Count
-from .models import Patient
-from .models import TestResult
+    return render(request, 'core/role_login.html', {'role': role})
 @login_required
 def doctor_dashboard(request):
-    # تم التصحيح إلى completed ليتطابق مع حالة النظام
     completed_results = TestResult.objects.filter(status='completed')
 
     context = {
         'completed_results': completed_results
     }
-    return render(request, 'core/doctor_dashboard.html', context)
 
+    return render(request, 'core/doctor_dashboard.html', context)
 @login_required
 def manager_dashboard(request):
     pending_count = TestResult.objects.filter(status='pending').count()

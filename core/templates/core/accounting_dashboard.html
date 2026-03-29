@@ -40,19 +40,9 @@
                 <tbody>
                     {% for result in approved_results %}
                     <tr>
-                        <td>
-                            {# الوصول للاسم الصحيح للمريض #}
-                            {{ result.patienttest.patient_first_name|default:result.patienttest.patient_first_name }}
-                        </td>
-                        <td>
-                            {# الوصول لاسم الفحص #}
-                            {{ result.patienttest.test_name }}
-                        </td>
-                        <td>
-                            {# عرض السعر من موديل الفحص #}
-                            <span class="fw-bold text-success">
-                                ${{ result.patienttest.test_price }}
-                            </span>
+                        <td>{{ result.patienttest.patient.first_name }} {{ result.patienttest.patient.last_name }}</td>
+                        <td>{{ result.patienttest.test.test_name }}</td>
+                        <td>${{ result.patienttest.test.test_price }}</td>
                         </td>
                         <td>
                             <span class="badge bg-success">
