@@ -1,46 +1,97 @@
 {% extends "base.html" %}
+
 {% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="mb-4">Patient Details</h2>
 
-<h2>Patient Detail</h2>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p>
+                        <strong>First Name:</strong>
+                        {{ patient.first_name|default:"Not Available" }}
+                    </p>
+                </div>
 
-<p><strong>Name:</strong> {{ patient.first_name }}</p>
-<p><strong>Age:</strong> {{ patient.date_of_birth }}</p>
-<p><strong>Device No:</strong> {{ patient.device_no }}</p>
+                <div class="col-md-6">
+                    <p>
+                        <strong>Date of Birth:</strong>
+                        {{ patient.date_of_birth|default:"Not Available" }}
+                    </p>
+                </div>
 
-<hr>
+                <div class="col-md-6">
+                    <p>
+                        <strong>Device Number:</strong>
+                        {{ patient.device_no|default:"Not Available" }}
+                    </p>
+                </div>
+            </div>
 
-<h3>Patient Tests</h3>
+            <hr>
 
-<table border="1">
-    <tr>
-        <th>Test</th>
-        <th>Date</th>
-        <th>Status</th>
-        <th>Action</th>
-    </tr>
+            <h3 class="mb-3">Patient Tests</h3>
 
-    {% for pt in patienttest %}
-    <tr>
-        <td>{{ pt.test_name }}</td>
-        <td>{{ pt.created_at }}</td>
-        <td>{{ pt.status }}</td>
-        <td>
-            {% if pt.result %}
-            <a href="{% url 'core:testresult_detail' pt.testresult.id %}">
-                View Result
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Test</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for pt in patienttest %}
+                        <tr>
+                            <td>
+                                {{ pt.test.test_name|default:"Not Available" }}
+                            </td>
+
+                            <td>
+                                {{ pt.created_at|default:" Not Available" }}
+                            </td>
+
+                            <td>
+                                {{ pt.status|default:"Unspecified" }}
+                            </td>
+
+                            <td>
+                                {% if pt.result %}
+                                    <a
+                                        href="{% url 'core:testresult_detail' pt.result.id %}"
+                                        class="btn btn-sm btn-primary"
+                                    >
+                                    View Result
+                                    </a>
+                                {% else %}
+                                    <a
+                                        href="{% url 'core:testresult_create' pt.id %}"
+                                        class="btn btn-sm btn-success"
+                                    >
+                                    Add Result
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">
+                            No tests have been recorded for this patient.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <a href="{% url 'core:patient_list' %}" class="btn btn-secondary mt-3">
+                Back to patient List
             </a>
-            {% else %}
-            <a href="{% url 'core:testresult_create' pt.id %}">
-                Add Result
-            </a>
-            {% endif %}
-        </td>
-    </tr>
-    {% empty %}
-    <tr>
-        <td colspan="4">No tests found.</td>
-    </tr>
-    {% endfor %}
-</table>
-
+        </div>
+    </div>
+</div>
 {% endblock %}

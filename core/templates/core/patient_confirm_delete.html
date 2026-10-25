@@ -1,18 +1,40 @@
+```html
 {% extends "base.html" %}
 {% block content %}
 
-<h3>هل انت متأكد من حذف المريض؟</h3>
+<div class="container mt-5">
+    <div class="card shadow mx-auto" style="max-width: 550px;">
+        <div class="card-body p-4 text-center">
 
-<p>
-    {{ patient.first_name }} {{ patient.last_name }}
-</p>
+            <h3 class="mb-3 text-danger">
+                Are you sure you want to delete this patient?
+            </h3>
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">حذف</button>
-    <a href="{% url 'core:patient_list' %}" class="btn btn-secondary">
-        رجوع
-    </a>
-</form>
+            <p class="fs-5 mb-4">
+                {{ patient.first_name }}
+                {{ patient.last_name }}
+            </p>
+
+            <p class="text-muted">
+                Please verify the patient information before proceeding.
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <button type="submit" class="btn btn-danger">
+                Confirm Delete
+                </button>
+
+                <a href="{% url 'core:patient_list' %}"
+                   class="btn btn-secondary">
+                    Back
+                </a>
+            </form>
+
+        </div>
+    </div>
+</div>
 
 {% endblock %}
+```

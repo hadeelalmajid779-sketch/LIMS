@@ -1,1 +1,10 @@
 /lims-system
+
+/db.sqlite3
+/db_backup*.sqlite3
+__pycache__/
+*.py[cod]
+/staticfiles/
+/core/staticfiles/
+venv/
+.env

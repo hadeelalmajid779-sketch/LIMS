@@ -1,3 +1,4 @@
+```html
 {% extends "base.html" %}
 {% block content %}
 
@@ -8,7 +9,9 @@
     <div class="card shadow">
         <div class="card-body">
 
-            <h5 class="mb-3">Completed Test Results (Waiting for Approval)</h5>
+            <h5 class="mb-3">
+                Completed Test Results (Waiting for Approval)
+            </h5>
 
             <table class="table table-hover table-bordered align-middle">
                 <thead class="table-dark">
@@ -19,44 +22,51 @@
                         <th>Action</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     {% for result in completed_results %}
                     <tr>
                         <td>
-                            {# تعديل طريقة عرض اسم المريض #}
-                            {% if result.patienttest.patient.first_name %}
-                            {{ result.patienttest.patient.first_name}}
-                            {% else %}
                             {{ result.patienttest.patient.first_name }}
-                            {% endif %}
                         </td>
+
                         <td>
-                            {# تعديل جلب اسم الفحص من موديل Test #}
                             {{ result.patienttest.test.test_name }}
                         </td>
+
                         <td>
                             <span class="badge bg-info text-dark">
                                 {{ result.statustitle }}
                             </span>
                         </td>
+
                         <td>
-                            <div class="d-flex gap-2">
-                                <a href="{% url 'core:testresult_approve' result.id %}" class="btn btn-success btn-sm">
+                            <div class="d-flex gap-2 flex-wrap">
+
+                                <a href="{% url 'core:testresult_approve' result.id %}"
+                                   class="btn btn-success btn-sm">
                                     Approve Result
                                 </a>
-                                <a href="{% url 'core:testresult_detail' result.id %}" class="btn btn-primary btn-sm">
+
+                                <a href="{% url 'core:testresult_detail' result.id %}"
+                                   class="btn btn-primary btn-sm">
                                     View Details
                                 </a>
-                                <a href="{% url 'core:testresult_pdf' result.id %}" class="btn btn-secondary btn-sm">
+
+                                <a href="{% url 'core:testresult_pdf' result.id %}"
+                                   class="btn btn-secondary btn-sm">
                                     Download PDF
                                 </a>
+
                             </div>
                         </td>
                     </tr>
+
                     {% empty %}
                     <tr>
                         <td colspan="4" class="text-center py-4">
-                            <i class="fas fa-info-circle me-2"></i> No completed test results found.
+                            <i class="fas fa-info-circle me-2"></i>
+                            No completed test results found.
                         </td>
                     </tr>
                     {% endfor %}
@@ -69,3 +79,4 @@
 </div>
 
 {% endblock %}
+```

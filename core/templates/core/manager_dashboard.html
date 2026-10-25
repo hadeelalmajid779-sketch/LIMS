@@ -1,22 +1,29 @@
+```html
 {% extends "base.html" %}
 {% block content %}
 
-<a href="{% url 'core:export_manager_report' %}" class="btn btn-dark mb-3">
-    Export Full Report (Excel)
-</a>
-<a href="{% url 'core:export_manager_pdf' %}" class="btn btn-dark mb-3">
-    Download PDF Report
-</a>
-
 <div class="container mt-4">
+
+    <!-- Report Export Buttons -->
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        <a href="{% url 'core:export_manager_report' %}"
+           class="btn btn-dark">
+            Export Full Report (Excel)
+        </a>
+
+        <a href="{% url 'core:export_manager_pdf' %}"
+           class="btn btn-dark">
+            Download PDF Report
+        </a>
+    </div>
 
     <h2 class="mb-4">Manager Dashboard</h2>
 
     <!-- Top Statistics Cards -->
-    <div class="row">
+    <div class="row g-3">
 
         <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3 shadow">
+            <div class="card text-white bg-primary h-100 shadow">
                 <div class="card-body">
                     <h5>Total Patients</h5>
                     <h3>{{ patients_count }}</h3>
@@ -25,7 +32,7 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card text-white bg-success mb-3 shadow">
+            <div class="card text-white bg-success h-100 shadow">
                 <div class="card-body">
                     <h5>Total Tests</h5>
                     <h3>{{ tests_count }}</h3>
@@ -34,7 +41,7 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card text-white bg-danger mb-3 shadow">
+            <div class="card text-white bg-danger h-100 shadow">
                 <div class="card-body">
                     <h5>Total Results</h5>
                     <h3>{{ results_count }}</h3>
@@ -59,17 +66,20 @@
             <canvas id="revenueChart"></canvas>
         </div>
     </div>
+
+    <!-- Test Status Distribution -->
     <div class="card shadow mt-4">
         <div class="card-body">
             <h5 class="mb-3">Test Status Distribution</h5>
             <canvas id="statusChart"></canvas>
         </div>
     </div>
+
     <!-- Status Cards -->
-    <div class="row mt-4">
+    <div class="row g-3 mt-3">
 
         <div class="col-md-4">
-            <div class="card text-white bg-warning shadow">
+            <div class="card text-dark bg-warning h-100 shadow">
                 <div class="card-body">
                     <h6>Pending Results</h6>
                     <h4>{{ pending_count }}</h4>
@@ -78,7 +88,7 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card text-white bg-info shadow">
+            <div class="card text-dark bg-info h-100 shadow">
                 <div class="card-body">
                     <h6>Completed Results</h6>
                     <h4>{{ complete_count }}</h4>
@@ -87,7 +97,7 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card text-white bg-success shadow">
+            <div class="card text-white bg-success h-100 shadow">
                 <div class="card-body">
                     <h6>Approved Results</h6>
                     <h4>{{ approved_count }}</h4>
@@ -99,21 +109,43 @@
 
 </div>
 
+<!-- Safely pass Django data to JavaScript -->
+{{ labelssafe|json_script:"patients-labels-data" }}
+{{ datasafe|json_script:"patients-values-data" }}
+{{ months|json_script:"revenue-labels-data" }}
+{{ totals|json_script:"revenue-values-data" }}
+
 <!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+    // Read JSON data supplied by Django
+    const patientLabels = JSON.parse(
+        document.getElementById('patients-labels-data').textContent
+    );
+
+    const patientValues = JSON.parse(
+        document.getElementById('patients-values-data').textContent
+    );
+
+    const revenueLabels = JSON.parse(
+        document.getElementById('revenue-labels-data').textContent
+    );
+
+    const revenueValues = JSON.parse(
+        document.getElementById('revenue-values-data').textContent
+    );
+
     // Patients Chart
     const patientsCtx = document.getElementById('patientsChart');
 
     new Chart(patientsCtx, {
         type: 'bar',
         data: {
-            labels: { labelssafe },
+            labels: patientLabels,
             datasets: [{
                 label: 'Patients',
-                data: { datasafe },
+                data: patientValues,
                 backgroundColor: '#0d6efd',
                 borderRadius: 8
             }]
@@ -137,12 +169,12 @@
     new Chart(revenueCtx, {
         type: 'line',
         data: {
-            labels: { monthssafe },
+            labels: revenueLabels,
             datasets: [{
                 label: 'Monthly Revenue',
-                data: { totalssafe },
+                data: revenueValues,
                 borderColor: '#198754',
-                backgroundColor: 'rgba(25,135,84,0.2)',
+                backgroundColor: 'rgba(25, 135, 84, 0.2)',
                 borderWidth: 3,
                 tension: 0.4,
                 fill: true
@@ -165,9 +197,9 @@
             labels: ['Pending', 'Completed', 'Approved'],
             datasets: [{
                 data: [
-                    { pending_count },
-                    { complete_count },
-                    { approved_count }
+                    Number('{{ pending_count|default:0 }}'),
+                    Number('{{ complete_count|default:0 }}'),
+                    Number('{{ approved_count|default:0 }}')
                 ],
                 backgroundColor: [
                     '#ffc107',
@@ -184,4 +216,6 @@
         }
     });
 </script>
+
 {% endblock %}
+```

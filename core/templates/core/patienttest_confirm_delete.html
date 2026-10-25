@@ -1,18 +1,46 @@
 {% extends "base.html" %}
+
 {% block content %}
+<div class="container mt-4 mb-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+        <div class="card-body p-4 text-center">
 
-<h3>Confirm Delete</h3>
+            <i class="bi bi-exclamation-triangle text-danger"
+               style="font-size: 2.5rem;"></i>
 
-<p>
-    {{ patienttest.patient }} - {{ patienttest.test }}
-</p>
+            <h3 class="text-danger mt-3 mb-4">
+                Confirm Test Deletion
+            </h3>
 
-<form method="post">
-    {% csrf_token %}
-    <button class="btn btn-danger">Delete</button>
-    <a href="{% url 'core:patienttest_list' %}" class="btn btn-secondary">
-        Cancel
-    </a>
-</form>
+            <p class="fs-5">
+                Patient:
+                <strong>{{ patienttest.patient }}</strong>
+            </p>
 
+            <p class="fs-5 mb-4">
+               Test:
+                <strong>{{ patienttest.test }}</strong>
+            </p>
+
+            <div class="alert alert-warning text-start">
+                Are you sure you want to delete this test? Please verify the information before proceeding.
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i>
+                    Confirm Deletion
+                </button>
+
+                <a href="{% url 'core:patienttest_list' %}"
+                   class="btn btn-secondary">
+                   Cancel and Go Back
+                </a>
+            </form>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

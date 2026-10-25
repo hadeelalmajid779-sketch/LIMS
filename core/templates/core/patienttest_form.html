@@ -1,16 +1,61 @@
 {% extends "base.html" %}
+
 {% block content %}
+<div class="container mt-4 mb-4">
+    <div class="card shadow-sm mx-auto" style="max-width: 850px;">
+        <div class="card-body p-4">
 
-<h3>Add Patient Test</h3>
+            <h3 class="text-primary mb-4">
+                <i class="bi bi-clipboard2-pulse"></i>
+                Add Test for Patient
+            </h3>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+            <form method="post">
+                {% csrf_token %}
 
-    <button class="btn btn-primary">Save</button>
-    <a href="{% url 'core:patienttest_list' %}" class="btn btn-secondary">
-        Cancel
-    </a>
-</form>
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            <p class="mb-0">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">
+                            {{ field.label }}
+                            {% if field.field.required %}
+                                <span class="text-danger">*</span>
+                            {% endif %}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                            <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <div class="d-flex flex-wrap gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i>
+                        Save Test
+                    </button>
+
+                    <a href="{% url 'core:patienttest_list' %}"
+                       class="btn btn-secondary">
+                        Cancel and Go Back
+                    </a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

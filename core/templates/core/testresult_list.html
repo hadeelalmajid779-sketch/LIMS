@@ -18,7 +18,7 @@
 
 <form method="get" class="mb-3">
     <select name="status" class="form-select" onchange="this.form.submit()">
-        <option> value = "">All</option>
+        <option> value = ""All</option>
         <option> value = "pending" {% if status == 'pending' %}selected{% endif %}>Pending</option>
         <option> value = "completed" {% if status == 'completed' %}selected{% endif %}>Completed</option>
         <option> value = "approved" {% if status == 'approved' %}selected{% endif %}>Approved</option>

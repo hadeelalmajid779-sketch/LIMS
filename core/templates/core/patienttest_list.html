@@ -1,53 +1,82 @@
 {% extends "base.html" %}
+
 {% block content %}
+<div class="container mt-4 mb-4">
 
-<h3>Patient Test</h3>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+        <h3 class="text-primary mb-0">Patients Tests</h3>
 
-<a href="{% url 'core:patienttest_create' %}" class="btn btn-success mb-3">
-    Add Patient Test
-</a>
+        <a href="{% url 'core:patienttest_create' %}"
+           class="btn btn-success">
+            <i class="bi bi-plus-circle"></i>
+            Add Test for Patient
+        </a>
+    </div>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Patient</th>
-            <th>Test</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for pt in patienttest %}
-        <tr>
-            <td>{{ pt.patient }}</td>
-            <td>{{ pt.test }}</td>
-            <td>{{ pt.status }}</td>
-            <td>
-                {% if pt.status == 'pending' %}
-                <a href="{% url 'core:testresult_create' pt.id %}" class="btn btn-sm btn-primary">
-                    Add Result
-                </a>
-                {% else %}
-                <a href="{% url 'core:testresult_detail' pt.id %}" class="btn btn-sm btn-success">
-                    View Result
-                </a>
-                {% endif %}
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped mb-0">
+                    <thead class="table-primary text-center">
+                        <tr>
+                            <th>Patient</th>
+                            <th>Test</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
 
-                <a href="{% url 'core:patienttest_detail' pt.id %}" class="btn btn-sm btn-info">
-                    Details
-                </a>
+                    <tbody class="text-center align-middle">
+                        {% for pt in patienttest_list %}
+                        <tr>
+                            <td>{{ pt.patient }}</td>
 
-                <a href="{% url 'core:patienttest_delete' pt.id %}" class="btn btn-sm btn-danger">
-                    Delete
-                </a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="4">No data</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                            <td>{{ pt.test }}</td>
 
+                            <td>{{ pt.status|default:"Unspecified" }}</td>
+
+                            <td>
+                                <div class="d-flex flex-wrap justify-content-center gap-1">
+
+                                    {% if pt.status == 'pending' %}
+                                        <a href="{% url 'core:testresult_create' pt.id %}"
+                                           class="btn btn-sm btn-primary">
+                                            <i class="bi bi-file-earmark-plus"></i>
+                                            Add Result
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted small">
+                                            The result URL cannot be determined before validating the result data.
+                                        </span>
+                                    {% endif %}
+
+                                    <a href="{% url 'core:patienttest_detail' pt.id %}"
+                                       class="btn btn-sm btn-info">
+                                        <i class="bi bi-eye"></i>
+                                        Details
+                                    </a>
+
+                                    <a href="{% url 'core:patienttest_delete' pt.id %}"
+                                       class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i>
+                                        Delete
+                                    </a>
+
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4">
+                                No tests have been registered yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
 {% endblock %}

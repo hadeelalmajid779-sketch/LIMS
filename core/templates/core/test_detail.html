@@ -1,24 +1,71 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="container">
-    <h2>{{ test.test_name }} ({{ test.test_code }})</h2>
-    <dl class="row">
-        <dt class="col-sm-3">Department</dt>
-        <dd class="col-sm-9">{{ test.department }}</dd>
-        <dt class="col-sm-3">Price</dt>
-        <dd class="col-sm-9">{{ test.price }}</dd>
-        <dt class="col-sm-3">Unit</dt>
-        <dd class="col-sm-9">{{ test.unit }}</dd>
-        <dt class="col-sm-3">Reference Range</dt>
-        <dd class="col-sm-9">{{ test.reference_range }}</dd>
-        <dt class="col-sm-3">Turnaround (hours)</dt>
-        <dd class="col-sm-9">{{ test.turnaround_time_hours }}</dd>
-        <dt class="col-sm-3">Active</dt>
-        <dd class="col-sm-9">{{ test.active }}</dd>
-    </dl>
-    <p>
-        <a class="btn btn-secondary" href="{% url 'core:test_edit' test.pk %}">Edit</a>
-        <a class="btn btn-primary" href="{% url 'core:test_list' %}">Back to tests</a>
-    </p>
+<div class="container mt-4 mb-4">
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+        <h2 class="text-primary mb-0">
+            {{ test.test_name }}
+            <small class="text-muted fs-6">({{ test.test_code }})</small>
+        </h2>
+
+        {% if test.active %}
+            <span class="badge bg-success">Active</span>
+        {% else %}
+            <span class="badge bg-secondary">Inactive</span>
+        {% endif %}
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            Test Information
+        </div>
+
+        <div class="card-body">
+            <dl class="row mb-0">
+
+                <dt class="col-sm-4 col-md-3 mb-2">Department</dt>
+                <dd class="col-sm-8 col-md-9 mb-3">
+                    {{ test.department|default:"Unspecified" }}
+                </dd>
+
+                <dt class="col-sm-4 col-md-3 mb-2">Price</dt>
+                <dd class="col-sm-8 col-md-9 mb-3">
+                    {{ test.price|default:"—" }}
+                </dd>
+
+                <dt class="col-sm-4 col-md-3 mb-2">Unit of Measurement</dt>
+                <dd class="col-sm-8 col-md-9 mb-3">
+                    {{ test.unit|default:"—" }}
+                </dd>
+
+                <dt class="col-sm-4 col-md-3 mb-2">Reference Range</dt>
+                <dd class="col-sm-8 col-md-9 mb-3">
+                    {{ test.reference_range|default:"—" }}
+                </dd>
+
+                <dt class="col-sm-4 col-md-3 mb-2">Turnaround Time</dt>
+                <dd class="col-sm-8 col-md-9 mb-3">
+                    {{ test.turnaround_time_hours|default:"—" }} hours
+                </dd>
+
+            </dl>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mt-4">
+        <a href="{% url 'core:test_edit' test.pk %}"
+           class="btn btn-warning">
+            <i class="bi bi-pencil"></i>
+            Edit Test
+        </a>
+
+        <a href="{% url 'core:test_list' %}"
+           class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Return to Test List
+        </a>
+    </div>
+
 </div>
 {% endblock %}

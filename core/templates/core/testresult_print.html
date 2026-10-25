@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Test Result</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratory Test Result</title>
+
     <style>
         body {
-            font-family: Arial;
+            font-family: Arial, sans-serif;
             margin: 40px;
+            color: #222;
         }
 
         .header {
@@ -26,7 +29,7 @@
 
         .box p {
             font-size: 16px;
-            margin: 8px 0;
+            margin: 10px 0;
         }
 
         .footer {
@@ -34,37 +37,60 @@
             text-align: right;
         }
 
+        .warning {
+            text-align: center;
+            color: #a12622;
+            margin-bottom: 20px;
+        }
+
         @media print {
             body {
-                margin: 0;
+                margin: 10mm;
+            }
+
+            .no-print {
+                display: none;
             }
         }
     </style>
 </head>
 
-{% if result.status == 'approved' %}
+<body>
 
-<body onload="window.print()">
-    {% else %}
+    {% if result.status == 'approved' %}
 
-    <body>
-        <h3>هذا الفحص غير موافَق عليه بعد</h3>
-        {% endif %}
-
-        <h2>Laboratory Test Result</h2>
+        <div class="header">
+            <h2>Laboratory Test Result</h2>
+        </div>
 
         <div class="box">
             <p><strong>Patient:</strong> {{ result.patienttest.patient }}</p>
             <p><strong>Test:</strong> {{ result.patienttest.test }}</p>
-            <p><strong>Result:</strong> {{ result.result_valu }} {{ result.unit }}</p>
-            <p><strong>Reference Range:</strong> {{ result.reference_range }}</p>
+            <p><strong>Result:</strong> {{ result.result_valu|default:"—" }} {{ result.unit|default:"" }}</p>
+            <p><strong>Reference Range:</strong> {{ result.reference_range|default:"—" }}</p>
             <p><strong>Status:</strong> {{ result.get_status_display }}</p>
-            <p><strong>Approved by:</strong> {{ result.approved_by }}</p>
-            <p><strong>Approved at:</strong> {{ result.approved_at }}</p>
+            <p><strong>Approved by:</strong> {{ result.approved_by|default:"—" }}</p>
+            <p><strong>Approved at:</strong> {{ result.approved_at|default:"—" }}</p>
         </div>
+
         <div class="footer">
             <p><strong>Doctor Signature:</strong> ____________________</p>
         </div>
-    </body>
 
+        <script>
+            window.addEventListener("load", function () {
+                window.print();
+            });
+        </script>
+
+    {% else %}
+
+        <div class="warning">
+            <h3>This result has not been approved yet, so the final report cannot be printed.</h3>
+
+        </div>
+
+    {% endif %}
+
+</body>
 </html>

@@ -1,43 +1,140 @@
 {% extends "base.html" %}
+
 {% block content %}
+<div class="container mt-4 mb-4">
 
-<h3>TestResult Detail</h3>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+        <h3 class="text-primary mb-0">
+            <i class="bi bi-file-earmark-medical"></i>
+            Test Result Details
+        </h3>
 
-<p><strong>Patient:</strong> {{ result.patienttest.patient }}</p>
-<p><strong>Test:</strong> {{ result.patienttest.test }}</p>
-<p><strong>Result:</strong> {{ result.result_valu }} {{ result.unit }}</p>
-<p><strong>Reference Range:</strong> {{ result.reference_range }}</p>
+        {% if result.status == 'pending' %}
+            <span class="badge bg-warning text-dark">Pending</span>
+        {% elif result.status == 'completed' %}
+            <span class="badge bg-success">Completed</span>
+        {% elif result.status == 'approved' %}
+        <span class="badge bg-primary">Approved</span>
+        {% else %}
+            <span class="badge bg-secondary">
+                {{ result.status|default:"Unspecified" }}
+            </span>
+        {% endif %}
+    </div>
 
-<p><strong>Status:</strong>
-    {% if result.status == 'pending' %}
-    <span class="badge bg-warning">Pending</span>
-    {% elif result.status == 'completed' %}
-    <span class="badge bg-success">Completed</span>
-    {% elif result.status == 'approved' %}
-    <span class="badge bg-primary">Approved</span>
-    {% endif %}
-</p>
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            Patient and Test Information
+        </div>
 
-<hr>
-<p><strong>WBC:</strong> {{ result.wbc }}</p>
-<p><strong>RBC:</strong> {{ result.rbc }}</p>
-<p><strong>Hemoglobin:</strong> {{ result.hemoglobin }}</p>
-<p><strong>Hematocrit:</strong> {{ result.hematocrit }}</p>
-<p><strong>Platelets:</strong> {{ result.platelets }}</p>
-<hr>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <strong>Patient:</strong>
+                    <p class="mb-0">{{ result.patienttest.patient }}</p>
+                </div>
 
-{% if result.status == 'pending' %}
-<a class="btn btn-warning" href="{% url 'core:testresult_complete' result.pk %}">Mark as Completed</a>
-{% endif %}
+                <div class="col-md-6 mb-3">
+                    <strong>Test:</strong>
+                    <p class="mb-0">{{ result.patienttest.test }}</p>
+                </div>
 
-{% if result.status == 'completed' and perms.core.approve_testresult %}
-<a href="{% url 'core:testresult_approve' result.pk %}" class="btn btn-success">Approve Result</a>
-{% endif %}
+                <div class="col-md-6 mb-3">
+                    <strong>Result:</strong>
+                    <p class="mb-0">
+                        {{ result.result_valu|default:"—" }}
+                        {{ result.unit|default:"" }}
+                    </p>
+                </div>
 
-{% if perms.core.change_testresult and result.status != 'approved' %}
-<a href="{% url 'core:testresult_update' result.pk %}" class="btn btn-primary">Edit</a>
-{% endif %}
+                <div class="col-md-6 mb-3">
+                    <strong>Reference Range:</strong>
+                    <p class="mb-0">
+                        {{ result.reference_range|default:"—" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<a href="{% url 'core:testresult_print' result.id %}" target="_blank" class="btn btn-secondary">🖨 Print</a>
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            Blood Test Indicators
+        </div>
 
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped mb-0">
+                    <thead class="table-light">
+                        <tr>
+
+                            <th>Indicator</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>WBC</td>
+                            <td>{{ result.wbc|default:"—" }}</td>
+                        </tr>
+                        <tr>
+                            <td>RBC</td>
+                            <td>{{ result.rbc|default:"—" }}</td>
+                        </tr>
+                        <tr>
+                            <td>Hemoglobin</td>
+                            <td>{{ result.hemoglobin|default:"—" }}</td>
+                        </tr>
+                        <tr>
+                            <td>Hematocrit</td>
+                            <td>{{ result.hematocrit|default:"—" }}</td>
+                        </tr>
+                        <tr>
+                            <td>Platelets</td>
+                            <td>{{ result.platelets|default:"—" }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2">
+
+        {% if result.status == 'pending' %}
+            <a class="btn btn-warning"
+               href="{% url 'core:testresult_complete' result.pk %}">
+                <i class="bi bi-check-circle"></i>
+               Complete Result
+            </a>
+        {% endif %}
+
+        {% if result.status == 'completed' and perms.core.approve_testresult %}
+            <a href="{% url 'core:testresult_approve' result.pk %}"
+               class="btn btn-success">
+                <i class="bi bi-patch-check"></i>
+                Approve Result
+            </a>
+        {% endif %}
+
+        {% if perms.core.change_testresult and result.status != 'approved' %}
+            <a href="{% url 'core:testresult_update' result.pk %}"
+               class="btn btn-primary">
+                <i class="bi bi-pencil"></i>
+                Edite
+            </a>
+        {% endif %}
+
+        <a href="{% url 'core:testresult_print' result.id %}"
+           target="_blank"
+           rel="noopener"
+           class="btn btn-secondary">
+            <i class="bi bi-printer"></i>
+            Print Result
+        </a>
+
+    </div>
+
+</div>
 {% endblock %}

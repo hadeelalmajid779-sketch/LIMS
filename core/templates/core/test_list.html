@@ -7,6 +7,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th>#</th>
                 <th>Test Code</th>
                 <th>Test Name</th>
                 <th>Department</th>
@@ -16,7 +17,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for test in test %}
+            {% for test in tests %}
             <tr>
                 <td>{{ test.test_code }}</td>
                 <td><a href="{% url 'core:test_detail' test.pk %}">{{ test.test_name }}</a></td>

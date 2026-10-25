@@ -1,36 +1,67 @@
 {% extends "base.html" %}
+
 {% block content %}
+<div class="container mt-4 mb-4">
 
-<h3>Patient Test Details</h3>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+        <h3 class="text-primary mb-0">Test Details Patient</h3>
 
-<div class="card">
-    <div class="card-body">
-        <p>
-            <strong>Patient:</strong>
-            {{ patienttest.patient.first_name }}
-            {{ patienttest.patient.last_name }}
-        </p>
-
-        <p>
-            <strong>Test:</strong>
-            {{ patienttest.test }}
-        </p>
-
-        <p>
-            <strong>Date:</strong>
-            {{ patienttest.created_at|date:"Y-m-d" }}
-        </p>
+        <a href="{% url 'core:patienttest_list' %}"
+           class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i>
+            Back to Test List
+        </a>
     </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            Test Information
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <strong>Patient Name:</strong>
+                    <p class="mb-0">
+                        {{ patienttest.patient.first_name }}
+                        {{ patienttest.patient.last_name }}
+                    </p>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <strong>Test Type:</strong>
+                    <p class="mb-0">{{ patienttest.test }}</p>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <strong>Registration Date Test:</strong>
+                    <p class="mb-0">
+                        {{ patienttest.created_at|date:"Y-m-d"|default:"—" }}
+                    </p>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <strong> Test Status:</strong>
+                    <p class="mb-0">
+                        {{ patienttest.status|default:"Unspecified" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mt-4">
+        <a href="{% url 'core:testresult_create' patienttest.id %}"
+           class="btn btn-primary">
+            <i class="bi bi-file-earmark-medical"></i>
+            Add Test Result
+        </a>
+
+        <a href="{% url 'core:patienttest_list' %}"
+           class="btn btn-secondary">
+            Back
+        </a>
+    </div>
+
 </div>
-
-<br>
-
-<a href="{% url 'core:testresult_create' patienttest.id %}" class="btn btn-primary">
-    Add Test Result
-</a>
-
-<a href="{% url 'core:patienttest_list' %}" class="btn btn-secondary">
-    Back
-</a>
-
 {% endblock %}
